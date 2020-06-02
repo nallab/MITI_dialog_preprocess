@@ -66,6 +66,19 @@ def load_MITI_dialog(directory, extension="csv", num_pre_context=0):
         #num_post_context (int): the number of dialogues after the target one.
     Returns:
         all_df (dict): a set of dataframe made by add_context(). the key is filename.
+    
+    >>> all_df = load_MITI_dialog('../example-20200312/', 'csv', 1)
+    reading done for ../example-20200312/case5.csv
+    reading done for ../example-20200312/case4.csv
+    reading done for ../example-20200312/case1.csv
+    reading done for ../example-20200312/case3.csv
+    reading done for ../example-20200312/case2.csv
+    >>> len(all_df)
+    5
+    >>> all_df['../example-20200312/case1.csv'].at[0, 'dialogue']
+    '<NA>\\t今回はどのような目的で来られましたか？'
+    >>> all_df['../example-20200312/case1.csv'].at[0, 'MITI_code']
+    0
     """
     if extension == "csv" or extension == "tsv":
         target = directory + "/*." + extension
@@ -128,6 +141,22 @@ def divide_dialog(all_df, train_rate=0.8):
         X_train, X_test, y_train, y_test (list):
             X is a list of dialogue.
             y is a list of MITI_code.
+    
+    >>> all_df = load_MITI_dialog('../example-20200312/', 'csv', 1)
+    reading done for ../example-20200312/case5.csv
+    reading done for ../example-20200312/case4.csv
+    reading done for ../example-20200312/case1.csv
+    reading done for ../example-20200312/case3.csv
+    reading done for ../example-20200312/case2.csv
+    >>> X_train, X_test, y_train, y_test = divide_dialog(all_df, train_rate=0.8)
+    >>> print(len(X_train), len(y_train))
+    20 20
+    >>> print(len(X_test), len(y_test))
+    5 5
+    >>> X_train[0]
+    '<NA>\\t今回はどのような目的で来られましたか？'
+    >>> y_train[0]
+    0
     """
     # divide dataset into train & test
     num_train_samples = int(len(all_df) * train_rate)
