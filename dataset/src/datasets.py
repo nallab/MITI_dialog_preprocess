@@ -129,7 +129,7 @@ def divide_dialog(all_df, train_rate=0.8):
         The train_rate is NOT directly related to the number of samples.
         It is used to determine the value of discources. For example,
         lets assume there are 5 discources that each discource consists of
-        100, 200, 300, 400 and 500 utterances (utterances). When we determine
+        100, 200, 300, 400 and 500 utterances (samples). When we determine
         to use the first 3 discources for trainting set, the number of
         training samples is 100 + 200 + 300 = 600 and the number of test
         samples is 400 + 500 = 900, even though the train_rate = 0.6.
