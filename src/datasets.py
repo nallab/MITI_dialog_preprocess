@@ -131,10 +131,11 @@ def dfs_to_dataset(all_df, keys):
                 signals.append(all_df[key].at[index, 'MITI_code'])
     return dialogues, signals
 
-def divide_dialog(all_df, train_rate=0.8, seed=None):
+def divide_dialog(all_df, train_rate=0.8, test_key=None, seed=None):
     """Divide a dataset into train & test set with train_rate.
     To avoid cheating, this function process on a discource basis
-    rather than on a utterance basis. This selection is made at random.
+    rather than on a utterance basis. In general, this selection
+    is made at random. But you can specify one test set by a test_key.
 
     Note:
         The train_rate is NOT directly related to the number of samples.
@@ -148,6 +149,10 @@ def divide_dialog(all_df, train_rate=0.8, seed=None):
     Args:
         all_df (dict): a set of df created by load_MITI_dialog().
         train_rate (float): a value (max=1.0) to set training dataset.
+            When you set a test_key below, this value is ignored.
+        test_key (str): onn key in all_df to set a test set.
+            It will be useful way when doing LOO. When you set a key,
+            train_rate is ignored.
         seed (int): you should set a seed when you want to fix the shuffled results.
     Returns:
         X_train, X_test, y_train, y_test (list):
@@ -170,10 +175,22 @@ def divide_dialog(all_df, train_rate=0.8, seed=None):
     >>> y_train[0]
     0
     """
+    # extraction by a specified key
+    if test_key != None:
+        if test_key in all_df.keys():
+            train_keys = list(all_df.key())
+            train_keys.remove(test_key)
+            X_train, y_train = dfs_to_dataset(all_df, train_keys)
+            X_test, y_test = dfs_to_dataset(all_df, test_key)
+            return X_train, X_test, y_train, y_test
+        else:
+            print("key {} was nothing in all_df.".format(key))
+            exit()
+
     if seed != None:
         random.seed(seed)
 
-    # divide dataset into train & test
+    # divide dataset into train & test at random
     num_train_samples = int(len(all_df) * train_rate)
     all_sample_keys = list(all_df.keys())
     random.shuffle(all_sample_keys)
@@ -192,7 +209,8 @@ if __name__ == '__main__':
     #print(all_df['../dataset/example-20200312/case1.csv'].at[0, 'MITI_code'])
     print(documents_df['../dataset/example-20200312/case2.csv'])
 
-    X_train, X_test, y_train, y_test = divide_dialog(all_df, train_rate=0.8)
+    #X_train, X_test, y_train, y_test = divide_dialog(all_df, train_rate=0.8)
+    X_train, X_test, y_train, y_test = divide_dialog(all_df, test_key='../dataset/example-20200312/case1.csv')
     #print(len(X_train), len(y_train))
     #print(len(X_test), len(y_test))
     #print(X_train[0])

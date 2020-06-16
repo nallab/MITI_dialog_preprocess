@@ -10,3 +10,8 @@ docs_token = preprocess.tokenize_ginza(X_train, nlp)
 print(type(docs_token[0]), len(docs_token[0])) #=> <class 'str'> 38
 print(docs_token[0]) #=> ＜ NA ＞ 今回 は どのような 目的 で 来る られる ます た か ？
 ```
+
+<hr>
+
+## 参考
+- [SpaCy Tutorial](https://github.com/yuibi/spacy_tutorial/blob/master/README.md)
